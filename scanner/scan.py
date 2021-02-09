@@ -6,26 +6,27 @@ import sys
 #sys.path.extend(['C:\\Users\\nsecurity\\project\\scanner\\scanner', 'C:\\Users\\nsecurity\\project\\scanner', 'C:\\Users\\nsecurity\\AppData\\Local\\Programs\\Python\\Python38-32\\Lib\\idlelib', 'C:\\Users\\nsecurity\\AppData\\Local\\Programs\\Python\\Python38-32\\python38.zip', 'C:\\Users\\nsecurity\\AppData\\Local\\Programs\\Python\\Python38-32\\DLLs', 'C:\\Users\\nsecurity\\AppData\\Local\\Programs\\Python\\Python38-32\\lib', 'C:\\Users\\nsecurity\\AppData\\Local\\Programs\\Python\\Python38-32', 'C:\\Users\\nsecurity\\AppData\\Local\\Programs\\Python\\Python38-32\\lib\\site-packages', 'C:\\Users\\nsecurity\\project\\venv\\Lib\\site-packages']
 #)
 sys.path.append('C:\\Users\\nsecurity\\project\\venv\\Lib\\site-packages')
+import pandas as pd
 import pdfreader
 from pdfreader import SimplePDFViewer
 import re
 
 #logger = logging.getLogger(__name__)
 
-class Month:
+# class Month:
     
-    def __init__(self, period):
-        period = None
-        balances = None
-        checks = None
-        other_debits = None
-        other_credits = None
-        for (key, value) in kwargs.iteritems():
-            if hasattr(self, key):
-                setattr(self, key, value)
+#     def __init__(self, period):
+#         period = None
+#         balances = None
+#         checks = None
+#         other_debits = None
+#         other_credits = None
+#         for (key, value) in kwargs.iteritems():
+#             if hasattr(self, key):
+#                 setattr(self, key, value)
 
-    def __str__(self):
-        return f"{self.period}"
+#     def __str__(self):
+#         return f"{self.period}"
 
 
 
@@ -39,6 +40,10 @@ def scan():
         return
     viewer = SimplePDFViewer(fd)
     r = 0
+    dates = []
+    amounts = []
+    ck_numbers = []
+    descriptions = []
     for canvas in viewer:
         r = r + 1
         print(r)
@@ -51,11 +56,13 @@ def scan():
         if 'STATEMENT PERIOD' not in page_string:
             continue
         #print(page_string)
+        df = pd.DataFrame(columns = ["DATE", "AMOUNT", "CHECK NUMBER", "DESCRIPTION"])
         print("PERIOD: ", get_period(page_string, r))
-        print(balances(page_string, r))
+        print("BALANCES: ", balances(page_string, r))
         print("CHECKS: ", checks(page_string,  r))
         print("OTHER DEBITS: ", other_debits(page_string, r))
         print("OTHER CREDITS: ", other_credits(page_string, r))
+    
         
 
 def get_period(page_string, r):
@@ -75,7 +82,6 @@ def balances(page_string, r):
     if (balances[3] != round((balances[0] + balances[1] - balances[2]), 2)):
         print("BALANCE TOTALS OFF! Page ", r)
     return balances
-
 
 def checks(page_string, r):
     ck_string = re.split('CHECKS CHECK NO DATE AMOUNT CHECK NO DATE AMOUNT | OTHER DEBITS DATE AMOUNT DESCRIPTION', page_string)[1]
