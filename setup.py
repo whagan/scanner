@@ -1,4 +1,5 @@
 import os.path
+import setuptools
 from setuptools import setup
 
 HERE = os.path.abspath(os.path.dirname(__file__))
@@ -15,7 +16,7 @@ setup(
     url="https://github.com/whagan/scanner",
     author="Will Hagan",
     license="MIT",
-    packages=["scanner"],
+    packages=setuptools.find_packages(),
     include_package_data=True,
     install_requires=[],
     entry_points={"console_scripts": ["whagan=scanner.__main__:main"]},

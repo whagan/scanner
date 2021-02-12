@@ -1,1 +1,1 @@
-from scanner.scanner import month
+from scanner.month import month
