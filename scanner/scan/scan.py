@@ -43,7 +43,8 @@ class Scan:
             self.curr_month = Month(period=period)
             print(self.curr_month)
         balances = self.get_balances()
-        self.curr_month.set
+        self.curr_month.set_balances(balances)
+        print(self.curr_month.balances)
 
 
 

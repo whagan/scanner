@@ -3,10 +3,11 @@
 /build
 /dist
 /venv
-/__pycache__
+__pycache__/
 /scanner/__pycache__
 /scanner/scan/__pycache__
 /scanner/month/__pycache__
-/scanner/regs/__pycache__
+/scanner/regs/__pycache__/
+/scanner/regs/__pycache__/*
 /scanner/regs/__pycache__/*
 .vscode
