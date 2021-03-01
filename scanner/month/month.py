@@ -10,14 +10,15 @@ class Month(object):
                 raise ValueError("Unknown key argument: {!r}".format(key))
 
     def __str__(self):
-        return "MONTHLY STATEMENT: {}".format(self.period)
+        return "MONTHLY SSTATEMENT: {}".format(self.period)
 
-    
     def check_balances(self):
         if all(isinstance(x, float) for x in self.balances) and len(self.balances) == 4:
             return self.balances[1] + self.balances[2] == self.balances[0] + self.balances[3]
         else:
             raise ValueError("Error on balances: {!r}".format(self.balances))
+
+    
 
 
         
