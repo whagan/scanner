@@ -12,6 +12,7 @@ class Scan:
         self.page_num = 0
         self.curr_page = None
         self.curr_period = None
+        self.curr_month = None
 
     def run(self):
         with open(self.fp, "rb") as file_:
@@ -39,12 +40,13 @@ class Scan:
     def parse_page(self):
         period = self.get_period()
         if self.check_period(period):
-            new_month = Month(period=period)
-            print(new_month)
+            self.curr_month = Month(period=period)
+            print(self.curr_month)
         balances = self.get_balances()
+        self.curr_month.set
 
-        # else:
-        #     raise ValueError("Error on current period: {!r}".format(period))
+
+
     
     def check_period(self, period):
         if period == self.curr_period: return False
