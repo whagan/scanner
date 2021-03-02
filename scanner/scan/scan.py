@@ -41,41 +41,46 @@ class Scan:
         period = self.get_period()
         if self.check_period(period):
             self.curr_month = Month(_period=period)
-            print(self.curr_month)
-            print(self.curr_month._period)
         self.curr_month._balances = self.get_balances()
-        print(self.curr_month._balances)
         self.curr_month._checks = self.get_checks()
-        print(self.curr_month._checks)
         # print(self.curr_page)
         self.curr_month._num_checks = self.get_num_checks()
-        print(self.curr_month.num_checks)
-        self.curr_month.check_checks
+        self.curr_month._other_debits = self.get_other_debits()
+        self.curr_month._other_credits = self.get_other_credits()
+        print(self.curr_month._print_month())
 
     def check_period(self, period):
         if period == self.curr_period: return False
         else: return True
     
     def get_period(self):   
-        period = re.findall(PERIOD_RX, self.curr_page.split('PAGE')[0])
+        period = re.findall(PER_RX, self.curr_page.split(PER_SPL)[0])
         if (len(period) != 1): raise ValueError("Error on statement period: {!r}".format(period))
         else: return period[0]
     
     def get_balances(self):
-        bal_string = self.curr_page.split('CHECKS CHECK NO DATE AMOUNT CHECK NO DATE AMOUNT')[0]
+        bal_string = self.curr_page.split(BAL_SPL)[0]
         balances = [float(x) for x in [x.strip(' ').replace(',', '') for x in re.findall(BAL_RX, bal_string)[:4]]]
         if (len(balances) != 4): raise ValueError("Error on number of balances: {!r}".format(balances))
         else: return balances
     
     def get_checks(self):
-        ck_string = re.split('CHECKS CHECK NO DATE AMOUNT CHECK NO DATE AMOUNT | OTHER DEBITS DATE AMOUNT DESCRIPTION', self.curr_page)[1]
+        ck_string = re.split(CK_SPL, self.curr_page)[1]
         checks = re.findall(CK_RX, ck_string)
         return checks
 
     def get_num_checks(self):
-        num_string = re.split('Available Balance', self.curr_page)[1]
+        num_string = re.split(NUM_SPL, self.curr_page)[1]
         num_checks = int(re.search(NUM_RX, num_string).group())
         return num_checks
 
+    def get_other_debits(self):
+        db_string = re.split(DB_SPL, self.curr_page)[1]
+        other_debits = [x for x in re.split(DB_RX, db_string) if x]
+        return other_debits
 
+    def get_other_credits(self):
+        cr_string = re.split(CR_SPL, self.curr_page)[1]
+        other_credits = [x for x in re.split(CR_RX, cr_string) if x]
+        return other_credits
 

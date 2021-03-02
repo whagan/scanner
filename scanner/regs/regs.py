@@ -1,4 +1,13 @@
-PERIOD_RX = "[\d]{1,2}/[\d]{1,2}/[\d]{4} To [\d]{1,2}/[\d]{1,2}/[\d]{4}"
+PER_RX = "[\d]{1,2}/[\d]{1,2}/[\d]{4} To [\d]{1,2}/[\d]{1,2}/[\d]{4}"
 BAL_RX = "((?:\d{1,3}(?:,?\d{3})*?)\.\d{2}| \.\d{2})"
 CK_RX = "\d{3,4}\*? [\d]{1,2}/[\d]{1,2}/[\d]{4} (?:\d{1,3}(?:,?\d{3})*?)\.\d{2}"
-NUM_RX = '\d+'
+NUM_RX = "\d+"
+DB_RX = "([\d]{1,2}/[\d]{1,2}/[\d]{4} (?:\d{1,3}(?:,?\d{3})*?)\.\d{2} (?:(?![\d]{1,2}/[\d]{1,2}/[\d]{4}).)*)"
+CR_RX = "([\d]{1,2}/[\d]{1,2}/[\d]{4} (?:\d{1,3}(?:,?\d{3})*?)\.\d{2} (?:(?![\d]{1,2}/[\d]{1,2}/[\d]{4}).)*)"
+
+PER_SPL = "PAGE"
+BAL_SPL = "CHECKS CHECK NO DATE AMOUNT CHECK NO DATE AMOUNT"
+CK_SPL = "CHECKS CHECK NO DATE AMOUNT CHECK NO DATE AMOUNT | OTHER DEBITS DATE AMOUNT DESCRIPTION"
+NUM_SPL = "Available Balance"
+DB_SPL = "OTHER DEBITS DATE AMOUNT DESCRIPTION | OTHER CREDITS DATE AMOUNT DESCRIPTION"
+CR_SPL = "OTHER CREDITS DATE AMOUNT DESCRIPTION | DAILY BALANCE INFORMATION DATE BALANCE DATE"
