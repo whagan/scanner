@@ -19,7 +19,7 @@ class Scan:
             viewer = SimplePDFViewer(file_)
             for canvas in viewer:
                 self.page_increment()
-                print(self.page_num)
+                #print("PAGE: ", self.page_num)
                 curr_page = ''.join(canvas.strings)
                 while '  ' in curr_page:
                     curr_page = curr_page.replace('  ', ' ')
@@ -40,15 +40,18 @@ class Scan:
     def parse_page(self):
         period = self.get_period()
         if self.check_period(period):
-            self.curr_month = Month(period=period)
+            self.curr_month = Month(_period=period)
             print(self.curr_month)
-        balances = self.get_balances()
-        self.curr_month.set_balances(balances)
-        print(self.curr_month.balances)
+            print(self.curr_month._period)
+        self.curr_month._balances = self.get_balances()
+        print(self.curr_month._balances)
+        self.curr_month._checks = self.get_checks()
+        print(self.curr_month._checks)
+        # print(self.curr_page)
+        self.curr_month._num_checks = self.get_num_checks()
+        print(self.curr_month.num_checks)
+        self.curr_month.check_checks
 
-
-
-    
     def check_period(self, period):
         if period == self.curr_period: return False
         else: return True
@@ -64,3 +67,15 @@ class Scan:
         if (len(balances) != 4): raise ValueError("Error on number of balances: {!r}".format(balances))
         else: return balances
     
+    def get_checks(self):
+        ck_string = re.split('CHECKS CHECK NO DATE AMOUNT CHECK NO DATE AMOUNT | OTHER DEBITS DATE AMOUNT DESCRIPTION', self.curr_page)[1]
+        checks = re.findall(CK_RX, ck_string)
+        return checks
+
+    def get_num_checks(self):
+        num_string = re.split('Available Balance', self.curr_page)[1]
+        num_checks = int(re.search(NUM_RX, num_string).group())
+        return num_checks
+
+
+
