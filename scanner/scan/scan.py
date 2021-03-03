@@ -43,11 +43,12 @@ class Scan:
             self.curr_month = Month(_period=period)
         self.curr_month._balances = self.get_balances()
         self.curr_month._checks = self.get_checks()
-        # print(self.curr_page)
+        print(self.curr_page + "\n")
         self.curr_month._num_checks = self.get_num_checks()
         self.curr_month._other_debits = self.get_other_debits()
         self.curr_month._other_credits = self.get_other_credits()
-        print(self.curr_month._print_month())
+        print(self.get_num_debits() + "\n")
+        #print(self.curr_month._print_month())
 
     def check_period(self, period):
         if period == self.curr_period: return False
@@ -84,3 +85,17 @@ class Scan:
         other_credits = [x for x in re.split(CR_RX, cr_string) if x]
         return other_credits
 
+    def get_num_debits(self):
+        if self.curr_month.check_balances:
+            try:
+                bal_string = self.curr_page.split(BAL_SPL)[0]
+                print(bal_string + "\n")
+                print("{}".format(self.curr_month.balances[1]))
+                num_debits = bal_string.replace('*', '').replace('^', '').split(str(self.curr_month._balances[1]))[1].split(str(self.curr_month._balances[2]))[0].strip()
+                #num_db_string = bal_string.split(str(self.curr_month._balances[1])).split(str(self.curr_month._balances[2]))[0]
+                return num_debits
+            except Error as error:
+                print("Error", error)
+                pass
+
+                
