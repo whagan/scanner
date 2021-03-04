@@ -1,5 +1,6 @@
 import sys
 from month import *
+import os
 import pdfreader
 from pdfreader import SimplePDFViewer
 import re
@@ -13,6 +14,7 @@ class Scan:
         self.curr_page = None
         self.curr_period = None
         self.curr_month = None
+     
 
     def run(self):
         with open(self.fp, "rb") as file_:
@@ -43,12 +45,20 @@ class Scan:
             self.curr_month = Month(_period=period)
         self.curr_month._balances = self.get_balances()
         self.curr_month._checks = self.get_checks()
-        print(self.curr_page + "\n")
+        #print(self.curr_page + "\n")
         self.curr_month._num_checks = self.get_num_checks()
         self.curr_month._other_debits = self.get_other_debits()
         self.curr_month._other_credits = self.get_other_credits()
-        print(self.get_num_debits() + "\n")
-        #print(self.curr_month._print_month())
+        #print(str(self.get_num_debits()) + "\n")
+        if isinstance(self.get_num_debits(), int):
+            self.curr_month._num_debits = self.get_num_debits()
+        print(self.curr_month._print_month())
+        try:
+            self.curr_month.check_num_debits()
+        except ValueError as v:
+            print("Whoa!")
+        
+
 
     def check_period(self, period):
         if period == self.curr_period: return False
@@ -87,15 +97,10 @@ class Scan:
 
     def get_num_debits(self):
         if self.curr_month.check_balances:
-            try:
-                bal_string = self.curr_page.split(BAL_SPL)[0]
-                print(bal_string + "\n")
-                print("{}".format(self.curr_month.balances[1]))
-                num_debits = bal_string.replace('*', '').replace('^', '').split(str(self.curr_month._balances[1]))[1].split(str(self.curr_month._balances[2]))[0].strip()
-                #num_db_string = bal_string.split(str(self.curr_month._balances[1])).split(str(self.curr_month._balances[2]))[0]
-                return num_debits
-            except Error as error:
-                print("Error", error)
-                pass
-
-                
+            bal_string = self.curr_page.split(BAL_SPL)[0]
+            dels = ['$', ',', ' ']
+            for ch in dels:
+                bal_string = bal_string.replace(ch, '')
+            num_debits = int(bal_string.split(str(self.curr_month._balances[1]))[1].split(str(self.curr_month._balances[2]))[0])
+            return num_debits
+        return -1

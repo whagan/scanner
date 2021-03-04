@@ -104,7 +104,7 @@ class Month(object):
     def check_num_debits(self):
         if len(self._checks) + len(self._other_debits) != self._num_debits:
             raise ValueError("Error: Number of checks + other debits do not equal number of total debits: + \
-                             {!r} + {!r} != {!r}".format(len(self._checks), len(self._other_debits, self._num_debits)))
+                             {!r} + {!r} != {!r}".format(len(self._checks), len(self._other_debits), self._num_debits))
         
 
 
