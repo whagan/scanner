@@ -21,7 +21,6 @@ class Scan:
             viewer = SimplePDFViewer(file_)
             for canvas in viewer:
                 self.page_increment()
-                #print("PAGE: ", self.page_num)
                 curr_page = ''.join(canvas.strings)
                 while '  ' in curr_page:
                     curr_page = curr_page.replace('  ', ' ')
@@ -45,18 +44,21 @@ class Scan:
             self.curr_month = Month(_period=period)
         self.curr_month._balances = self.get_balances()
         self.curr_month._checks = self.get_checks()
-        #print(self.curr_page + "\n")
+        print(self.curr_page + "\n")
         self.curr_month._num_checks = self.get_num_checks()
         self.curr_month._other_debits = self.get_other_debits()
         self.curr_month._other_credits = self.get_other_credits()
         #print(str(self.get_num_debits()) + "\n")
         if isinstance(self.get_num_debits(), int):
             self.curr_month._num_debits = self.get_num_debits()
-        print(self.curr_month._print_month())
+       
         try:
             self.curr_month.check_num_debits()
         except ValueError as v:
             print("Whoa!")
+        if isinstance(self.get_num_credits(), int):
+            self.curr_month._num_credits = self.get_num_credits()
+        #print(self.curr_month._print_month())
         
 
 
@@ -103,4 +105,23 @@ class Scan:
                 bal_string = bal_string.replace(ch, '')
             num_debits = int(bal_string.split(str(self.curr_month._balances[1]))[1].split(str(self.curr_month._balances[2]))[0])
             return num_debits
+        return -1
+    
+    def get_num_credits(self):
+        if self.curr_month.check_balances:
+            bal_string = self.curr_page.split(BAL_SPL)[0]
+            dels = ['$',',']
+            for ch in dels:
+                bal_string = bal_string.replace(ch, '')
+            bal_zero = "{:.2f}".format(self.curr_month._balances[0])
+            bal_two = "{:.2f}".format(self.curr_month._balances[2])
+            print(self.curr_month._balances)
+            print("BAL ZERO: ", bal_zero)
+            print("BAL TWO: ", bal_two)
+            s = bal_string.split(bal_zero)
+            print(s)
+            t = bal_string.split(bal_two)
+            print(t)
+            #num_credits = int(bal_string.split(bal_zero)[1].split(bal_two)[0])
+            return 0
         return -1

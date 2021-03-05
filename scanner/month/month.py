@@ -8,7 +8,7 @@ class Month(object):
     #atts = ['_period', '_balances', 'checks', 'num_checks']
 
     def __init__(self, **kwargs):
-        atts = ['_period', '_balances', '_checks', '_num_checks', '_other_debits', '_other_credit', '_num_debits']
+        atts = ['_period', '_balances', '_checks', '_num_checks', '_other_debits', '_other_credits', '_num_debits', '_num_credits']
         for key, value in kwargs.items():
             if key in atts:
                 setattr(self, key, value)
@@ -26,6 +26,7 @@ class Month(object):
                 "\nBALANCES: {}".format(self._balances) + \
                 "\nNUMBER OF CHECKS: {}".format(self._num_checks) + \
                 "\nNUMER OF TOTAL DEBITS: {}".format(self._num_debits) + \
+                "\nNUMBER OF TOTAL CREDITS: {}".format(self._num_credits) + \
                 "\nCHECKS: {}".format(self._checks) + \
                 "\nOTHER DEBITS: {}".format(self._other_debits) + \
                 "\nOTHER CREDITS: {}".format(self._other_credits) + \
@@ -90,6 +91,14 @@ class Month(object):
     @num_debits.setter 
     def num_debits(self, num_debits):
         self._num_debits = num_debits
+    
+    @property
+    def num_credits(self):
+        return self._num_credits 
+    
+    @num_credits.setter 
+    def num_credits(self, num_credits):
+        self._num_credits = num_credits
 
     def check_balances(self, balances):
         if all(isinstance(x, float) for x in balances) and len(balances) == 4:
@@ -105,6 +114,11 @@ class Month(object):
         if len(self._checks) + len(self._other_debits) != self._num_debits:
             raise ValueError("Error: Number of checks + other debits do not equal number of total debits: + \
                              {!r} + {!r} != {!r}".format(len(self._checks), len(self._other_debits), self._num_debits))
+    
+    def check_num_credit(self):
+        if len(self._other_credits) != self._num_credits:
+            raise ValueError("Error: Number of other checks do not equal number of total credits: + \
+                             {!r} != {!r}".format(len(self._other_credits), self._num_credits))
         
 
 
